@@ -1,7 +1,5 @@
-enum Theme {
-    PREMIERE_GUERRE_MONDIAL,
-    DEUXIEME_GUERRE_MONDIAL,
-    GUERRE_FROIDE,
-    GUERRE_ALGERIE,
-    REVOLUTION_SOVIETIQUE;
+class Theme {
+    ThemeType type;
+    String nom;
+    String questions;
 }
