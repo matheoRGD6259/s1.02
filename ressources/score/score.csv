@@ -1,7 +1,4 @@
-ScoreJoueur,nomJoueur
-00000,joueur0
-00000,joueur0
-00000,joueur0
-00000,joueur0
-00000,joueur0
-00000,joueur0
+nomJoueur;ScorePGM;ScoreSGM;ScoreGAL;ScoreGF;ScoreRSV;ScoreTest
+test;0;1;2;3;4;5
+intello;10;10;10;10;10;10
+mamadou;0;0;0;0;0;0
