@@ -1,0 +1,24 @@
+   
+    ╔═════════════════════════════════════════╗
+    ║   /// Q.G. OPERATIONS SPECIALES ///     ║
+    ║                                         ║
+    ║   Dossier: #84-B TACTIQUE               ║
+    ║   -----------------------               ║
+    ║                                         ║
+    ║            CARNET D'ENTRAINEMENT        ║
+    ║                                         ║
+    ║          [1] THEME ALEATOIRE            ║
+    ║                                         ║
+    ║                                         ║
+    ║          [2]  THEME AU CHOIX            ║
+    ║                                         ║
+    ║                                         ║
+    ║          [3]  PARCOURS DU               ║
+    ║             COMBATTANT                  ║
+    ║                                         ║
+    ║                                         ║
+    ║═════════════════════════════════════════║
+    ║                                         ║
+    ║     STATUT : EN ATTENTE D'ORDRES...     ║
+    ╚════╦═══════════════════════════════╦════╝
+         ╚═══════════════════════════════╝
