@@ -1,5 +1,7 @@
 class Theme {
-    ThemeType type;
     String nom;
-    String questions;
+
+    String[] questions;
+    String[][] choix;
+    int[] reponses;
 }

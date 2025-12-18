@@ -1,4 +1,4 @@
 Lieutenant H.Reigner
-Très bien soldat {@}, je retienderais votre nom.
-Voici votre carnet personnel, celui ou vous ferai vos choix à chaque fois que vous le prendrez, compris ?
-Faîtes votre choix soldat {@}...
+Très bien soldat {@}, je retienderai votre nom.
+Voici votre carnet personnel, celui dans lequel vous ferez vos choix à chaque fois que vous le prenez, compris ?
+Faites votre choix soldat {@}...

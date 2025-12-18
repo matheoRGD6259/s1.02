@@ -1,11 +1,11 @@
 class Joueur {
     String nom;
 
-    int scorePGM; // Première Guerre Mondial
-    int scoreSGM; // Seoncde Guerre Mondial
-    int scoreGAL; // Guerre d'Algérie
-    int scoreGF; // Guerre Froide
-    int scoreRSV; // Révolution Soviétique
-
-    int scoreTest; // Ce n'est pas une fonction de test mais celui d'un "Contrôle" basé sur tout les thème.
+    int scorePGM;  // Score sur la Première Guerre Mondial
+    int scoreSGM;  // Score sur la Seconde Guerre Mondial
+    int scoreGAL;  // Score sur la Guerre d'Algérie
+    int scoreGF;   // Score sur la Guerre Froide
+    int scoreRSV;  // Score sur la Révolution Soviétique
+    
+    int scoreTest; // Score du parcours du combattant
 }

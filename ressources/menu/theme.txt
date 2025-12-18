@@ -1,0 +1,31 @@
+   
+    ╔═════════════════════════════════════════╗
+    ║   /// Q.G. OPERATIONS SPECIALES ///     ║
+    ║                                         ║
+    ║   Dossier: #[2]Choix du Thème           ║
+    ║   -----------------------               ║
+    ║                                         ║
+    ║          Selection des missions         ║
+    ║                                         ║
+    ║          [1]   Première Guerre          ║
+    ║                   Mondiale              ║
+    ║                                         ║
+    ║                                         ║
+    ║          [2]   Seconde Guerre           ║
+    ║                   Mondiale              ║
+    ║                                         ║
+    ║                                         ║  
+    ║          [3]   Révolution Soviétique    ║
+    ║                                         ║
+    ║                                         ║    
+    ║          [4]   Guerre d'Algérie         ║                                
+    ║                                         ║
+    ║                                         ║          
+    ║          [5]   Guerre Froide            ║                           
+    ║                                         ║
+    ║                                         ║
+    ║═════════════════════════════════════════║
+    ║     STATUT : THEME VALIDÉ.              ║
+    ║              EN ATTENTE D'ORDRES...     ║
+    ╚════╦═══════════════════════════════╦════╝
+         ╚═══════════════════════════════╝
