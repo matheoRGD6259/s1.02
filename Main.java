@@ -5,14 +5,21 @@ class Main extends Program {
 
     final CSVFile SCORE = loadCSV("./ressources/data/score.csv", ';');
     final String[] THEME = getAllFilesFromDirectory("./ressources/data/questions/");
+    int NB_THEME = length(THEME);
 
     Theme[] themes = chargerTheme();
 
     Joueur joueur;
     Theme themeActuelle;
 
+    int rowCSV = -1;
+    int scoreToChange;
 
-    /* MANAGER DU JEU (Nouvelle Partie, Tableau des scores etc...) */
+    /* 
+    
+                    MANAGER DU JEU (Nouvelle Partie, Tableau des scores etc...) 
+                    
+    */
 
     void nouvellePartie() {
         if(joueur == null) {
@@ -21,8 +28,8 @@ class Main extends Program {
             joueur = newJoueur(nomJoueur);
             afficherDialogue("./ressources/dialogue/nouvellePartie.txt");
             println("");
+            afficherASCII("./ressources/menu/missions.txt");
         }
-        afficherASCII("./ressources/menu/missions.txt");
 
         println("");
         choixMenu();
@@ -65,7 +72,7 @@ class Main extends Program {
     }
 
     void chargerPartie() {
-        String[][] profiles = getProfiles();
+        String[][] profiles = getProfiles(false);
         for(int i = 0; i < length(profiles, 1); i++) {
             String nom = profiles[i][0];
             print((i + 1) + ".   " + nom + " | ");
@@ -83,6 +90,7 @@ class Main extends Program {
             sys(true);
         } else if(choix >= 1 && choix <= length(profiles, 1)) {
             joueur = loadPlayer(choix);
+            rowCSV = choix;
             continuerPartie();
         }
     }
@@ -104,7 +112,8 @@ class Main extends Program {
     }
 
     void jouer(int theme) {
-        themeActuelle = themes[theme];
+        themeActuelle = getTheme(getThemeName(theme));
+        scoreToChange = theme;
         animate("Lieutenant H.Reigner", "Le thème sélectionner est la " + themeActuelle.nom, true);
         animate(null, "Le jeu commence dans ", false);
         for(int i = 3; i > 0; i--) {
@@ -128,6 +137,10 @@ class Main extends Program {
             }
         }
         println("\nVotre note est de " + score + "/10.");
+        println("Sauvegarde du score et de votre profile en cours...");
+        joueur.scores[scoreToChange] = score;
+        sauvegarderJoueur(joueur);
+        println("Votre profile et votre score ont été sauvegardé !");
     }
 
     boolean reponseCorrect(Theme theme, int idQuestion) {
@@ -142,12 +155,15 @@ class Main extends Program {
         return choix == bonneReponse;
     }
 
+    /*
 
-    /* DONNEE THEME (Création d'un thème etc...) */
+                    DONNEE THEME (Création d'un thème etc...) 
+    
+    */
 
     Theme[] chargerTheme() {
-        Theme[] theme = new Theme[length(THEME)];
-        for(int i = 0; i < length(THEME); i++) {
+        Theme[] theme = new Theme[NB_THEME];
+        for(int i = 0; i < NB_THEME; i++) {
 
             CSVFile themeFile = loadCSV("./ressources/data/questions/" + THEME[i], ';');
             Theme nTheme = newTheme(themeFile);
@@ -182,15 +198,74 @@ class Main extends Program {
         return theme;
     }
 
-    /* DONNEE JOUEUR (Création d'un joueur, Chargement de données etc...) */
+    int getLignes(Theme theme) {
+        int res;
+        if(equals(theme.nom, "Première Guerre Mondiale")) {
+            res = 0;
+        } else if(equals(theme.nom, "Seconde Guerre Mondiale")) {
+            res = 1;
+        } else if(equals(theme.nom, "Guerre d'Algérie")) {
+            res = 2;
+        } else if(equals(theme.nom, "Guerre Froide")) {
+            res = 3;
+        } else {
+            res = 4;
+        }
 
-    String[][] getProfiles() {
-        String[][] profiles = new String[rowCount(SCORE) - 1][7];
+        return res;
+    }
 
-        for(int l = 1; l < rowCount(SCORE); l++) {
+    String getThemeName(int ligne) {
+        String nom;
+
+        if(ligne == 0) {
+            nom = "Première Guerre Mondiale";
+        } else if(ligne == 1) {
+            nom = "Seconde Guerre Mondiale";
+        } else if(ligne == 2) {
+            nom = "Guerre d'Algérie";
+        } else if(ligne == 3) {
+            nom = "Guerre Froide";
+        } else {
+            nom = "Révolution Soviétique";
+        }
+
+        return nom;
+    }
+
+    Theme getTheme(String nom) {
+        Theme theme = null;
+        for(int i = 0; i < NB_THEME; i++) {
+            if(equals(themes[i].nom, nom)) {
+                theme = themes[i];
+            }
+        }
+        return theme;
+    }
+
+    /* 
+    
+                    DONNEE JOUEUR (Création d'un joueur, Chargement de données etc...) 
+    
+    */
+
+    String[][] getProfiles(boolean csvMode) {
+        int total = rowCount(SCORE) - 1;
+        int idx = 1;
+        if(csvMode) {
+            total = rowCount(SCORE);
+            idx = 0;
+        }
+        String[][] profiles = new String[total][7];
+
+        for(int l = idx; l < rowCount(SCORE); l++) {
+            int pos = l - 1;
+            if(csvMode) {
+                pos = l;
+            }
             for(int c = 0; c < columnCount(SCORE); c++) {
                 String cellValue = getCell(SCORE, l, c);
-                profiles[l - 1][c] = cellValue;
+                profiles[pos][c] = cellValue;
             }
         }
 
@@ -201,11 +276,11 @@ class Main extends Program {
         Joueur joueur = new Joueur();
 
         joueur.nom = getCell(SCORE, ligne, 0);
-        joueur.scorePGM = stringToInt(getCell(SCORE, ligne, 1));
-        joueur.scoreSGM = stringToInt(getCell(SCORE, ligne, 2));
-        joueur.scoreGAL = stringToInt(getCell(SCORE, ligne, 3));
-        joueur.scoreGF = stringToInt(getCell(SCORE, ligne, 4));
-        joueur.scoreRSV = stringToInt(getCell(SCORE, ligne, 5));
+        joueur.scores = new int[NB_THEME];
+        for(int i = 0; i < NB_THEME; i++) {
+            int tempInt = i + 1;
+            joueur.scores[i] = stringToInt(getCell(SCORE, ligne, tempInt));
+        }
         joueur.scoreTest = stringToInt(getCell(SCORE, ligne, 6));
 
         return joueur;
@@ -214,13 +289,43 @@ class Main extends Program {
     Joueur newJoueur(String nom) {
         Joueur joueur = new Joueur();
         joueur.nom = nom;
-        joueur.scorePGM = 0;
-        joueur.scoreSGM = 0;
-        joueur.scoreGAL = 0;
-        joueur.scoreGF = 0;
-        joueur.scoreRSV = 0;
-        joueur.scoreTest = 0;
+
+        joueur.scores = new int[NB_THEME];
+        for(int i = 0; i < NB_THEME; i++) {
+            joueur.scores[i] = 0;
+        }
         return joueur;
+    }
+
+    void sauvegarderJoueur(Joueur joueur) {
+        String[][] csvTab;
+        int lineIdx;
+        if(rowCSV != -1) {
+            csvTab = getProfiles(true); 
+            lineIdx = rowCSV;
+        } else {
+            csvTab = ajouterLigneCSV(getProfiles(true));
+            lineIdx = length(csvTab, 1) - 1;
+
+        }
+        csvTab[lineIdx][0] = joueur.nom;
+        for(int i = 0; i < NB_THEME; i++) {
+            int tempInt = i + 1;
+            csvTab[lineIdx][tempInt] = "" + joueur.scores[i];
+        }
+        csvTab[lineIdx][6] = "" + joueur.scoreTest;
+        saveCSV(csvTab, "./ressources/data/score.csv", ';');
+    }
+
+    String[][] ajouterLigneCSV(String[][] csv) {
+        String[][] res = new String[length(csv, 1) + 1][length(csv, 2)];
+        for(int l = 0; l < length(csv, 1); l++) {
+            for(int c = 0; c < length(csv, 2); c++) {
+                res[l][c] = csv[l][c];
+            }
+        }
+
+        return res;
     }
 
     /* Utilitaires */
