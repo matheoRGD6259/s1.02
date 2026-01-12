@@ -1,6 +1,6 @@
 # JEU SAÉ1.02 
 
-*__Pour exécuter Quiz'toire de Guerre, il vous suffit d'utiliser cette simple commande:*__
+__*Pour exécuter Quiz'toire de Guerre, il vous suffit d'utiliser cette simple commande:*__
 ````
 sh launch.sh
 ````
