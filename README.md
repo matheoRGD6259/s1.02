@@ -1,6 +1,6 @@
 # JEU SAÉ1.02 
 
-Pour jouer, veuillez exécuter la commande suivante "ijava execute Main".
+Pour jouer, veuillez exécuter la commande suivante "sh launch.sh".
 
 Dans *Quiz'toire de Guerre*, l'objectif est de compléter le parcours du combattant. Afin de compléter ce parcours, il faut répondre correctement aux questions du Lieutenant H.Reigner.
 
