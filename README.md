@@ -12,7 +12,7 @@ Dans *Quiz'toire de Guerre*, l'objectif est de compléter le parcours du combatt
 - Le thème au choix: Vous pouvez choisir le thème que vous voulez pour vous entraîner.
 - Le parcours du combattant: Le test ultime pour évalué vos compétences, le thème change à chaque questions.
 
-*(Les scores sont sauvegarder automatiquement et vous avez la possibilité le rejouer sur la même sauvegarde)*
+*(Les scores sont sauvegardé automatiquement et vous avez la possibilité de rejouer sur la même sauvegarde)*
 
 Si vous souhaitez modifier ou ajouter des questions, vous devez vous rendre dans le dossier "ressources", puis "data" et finalement "questions", puis sélectionner la bonne catégorie. Ensuite, veuillez respecter le format spécifié à la première ligne du fichier.
 
