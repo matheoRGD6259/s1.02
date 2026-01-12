@@ -3,11 +3,12 @@ import extensions.CSVFile;
 
 class Main extends Program {
 
-    final CSVFile SCORE = loadCSV("./ressources/data/score.csv", ';');
+    CSVFile SCORE = loadCSV("./ressources/data/score.csv", ';');
     final String[] THEME = getAllFilesFromDirectory("./ressources/data/questions/");
     int NB_THEME = length(THEME);
 
     Theme[] themes = chargerTheme();
+    boolean[][] dejaPose = new boolean[length(themes)][15];
 
     Joueur joueur;
     Theme themeActuelle;
@@ -15,11 +16,38 @@ class Main extends Program {
     int rowCSV = -1;
     int scoreToChange;
 
+    int qNombre;
+
     /* 
     
                     MANAGER DU JEU (Nouvelle Partie, Tableau des scores etc...) 
                     
     */
+
+    void tableauScore() {
+
+        String[][] profiles = getProfiles(false);
+        if(profiles != null) {
+            println("\nNom du soldat\t Total des scores");
+            for(int i = 0; i < length(profiles, 1); i++) {
+                String nom = profiles[i][0];
+                int total = 0;
+                for(int n = 1; n < length(profiles, 2); n++) {
+                    total += stringToInt(profiles[i][n]);
+                }
+                print((i + 1) + ".   " + nom + "\t " + total + "\n");   
+            }
+
+            println("\nAppuyez sur entrée pour retourner au menu principale.");
+            readString();
+            algorithm();
+        } else {
+            animate(null, "Aucun profile n'a été sauvegardé actuellement.", true);
+            animate(null, "Pour jouer, tapez \"1\" pour démarrer une nouvelle partie !", true);
+            sleep(1000);
+            algorithm();
+        }
+    }
 
     void nouvellePartie() {
         if(joueur == null) {
@@ -28,9 +56,9 @@ class Main extends Program {
             joueur = newJoueur(nomJoueur);
             afficherDialogue("./ressources/dialogue/nouvellePartie.txt");
             println("");
-            afficherASCII("./ressources/menu/missions.txt");
         }
 
+        afficherASCII("./ressources/menu/missions.txt");
         println("");
         choixMenu();
 
@@ -48,20 +76,29 @@ class Main extends Program {
 
     void choixMenu() {
         int choix = choix();
-        if(choix >= 1 && choix <= 4) {
-            if(choix >= 3) {
-                animate("Lieutenant H.Reigner", syntaxe("Malheureusement... Ce campement est en cours d'installation soldat {@}..."), true);
-                sleep(500);
-                clean();
-                nouvellePartie();
-            } else {
+        if(choix >= 1 && choix <= 5) {
+            if(choix < 3) {
                 int num;
                 if(choix == 2) {
                     num = themeAuChoix();
                 } else {
                     num = random(1, length(themes));
                 }
-                jouer(num - 1);
+                if(num == 6) {
+                    nouvellePartie();
+                } else {
+                    qNombre = 1;
+                    jouer(num - 1);
+                }
+            } else {
+                if(choix == 3) {
+                    parcours();
+                } else if(choix == 4) {
+
+                } else {
+                    joueur = null;
+                    algorithm();
+                }
             }
         } else {
             animate("Lieutenant H.Reigner", syntaxe("Ces missions ne sont pas ouverte pour toi ! Choisis une mission que tu peux faire soldat {@}..."), true);
@@ -73,31 +110,53 @@ class Main extends Program {
 
     void chargerPartie() {
         String[][] profiles = getProfiles(false);
-        for(int i = 0; i < length(profiles, 1); i++) {
-            String nom = profiles[i][0];
-            print((i + 1) + ".   " + nom + " | ");
-            for(int n = 1; n < length(profiles, 2); n++) {
-                print(profiles[i][n] + " ");
+        if(profiles != null) {
+            for(int i = 0; i < length(profiles, 1); i++) {
+                String nom = profiles[i][0];
+                print((i + 1) + ".   " + nom + " | ");
+                for(int n = 1; n < length(profiles, 2); n++) {
+                    print(profiles[i][n] + " ");
+                }
+                println("");
             }
-            println("");
-        }
 
-        println("\n0.   Retour au menu principal.");
-        int choix = choix();
+            println("\n0.   Retour au menu principal.");
+            int choix = choix();
 
-        if(choix == 0) {
-            clean();
-            sys(true);
-        } else if(choix >= 1 && choix <= length(profiles, 1)) {
-            joueur = loadPlayer(choix);
-            rowCSV = choix;
-            continuerPartie();
+            if(choix == 0) {
+                algorithm();
+            } else if(choix >= 1 && choix <= length(profiles, 1)) {
+                joueur = loadPlayer(choix);
+                rowCSV = choix;
+                continuerPartie();
+            }
+        } else {
+            animate(null, "Aucun profile n'a été sauvegardé actuellement.", true);
+            animate(null, "Pour jouer, tapez \"1\" pour démarrer une nouvelle partie !", true);
+            sleep(1000);
+            algorithm();
         }
     }
 
     int choix() {
         print("\nVotre choix : ");
-        return readInt();
+        String r = readString();
+        if(length(r) < 1) {
+            r = "-1";
+        } else {
+            int idx = 0;
+            boolean breaker = false;
+            do {
+                char c = charAt(r, idx);
+                if(!(c >= '0' && c <= '9')) {
+                    r = "-1";
+                    breaker = true;
+                }
+                idx++;
+            } while(idx < length(r) && !breaker);
+        }
+
+        return stringToInt(r);
     }
     
     int themeAuChoix() {
@@ -107,7 +166,7 @@ class Main extends Program {
             afficherASCII("./ressources/menu/theme.txt");
             println("");
             themeAuChoix = choix();
-        } while(themeAuChoix < 1 || themeAuChoix > 5);
+        } while(themeAuChoix < 1 || themeAuChoix > 6);
         return themeAuChoix;
     }
 
@@ -116,31 +175,82 @@ class Main extends Program {
         scoreToChange = theme;
         animate("Lieutenant H.Reigner", "Le thème sélectionner est la " + themeActuelle.nom, true);
         animate(null, "Le jeu commence dans ", false);
-        for(int i = 3; i > 0; i--) {
-            animate(null, i + "... ", false);
-            sleep(875);
-        }
+        timer();
         println("\n");
         int score = 0;
         for(int i = 0; i < 10; i++) {
-            int random = random(1, length(themeActuelle.questions)) - 1;
-            String question = themeActuelle.questions[random];
-            println("Question n°" + (i+1) + ": " + question + "\n");
-            for(int j = 0; j < length(themeActuelle.choix, 2); j++) {
-                println((j + 1) + ".  " + themeActuelle.choix[random][j] + "\n");
-            }
-            if(reponseCorrect(themeActuelle, random)) {
+            int question = questionAleatoire(themeActuelle);
+            if(reponseCorrect(themeActuelle, question)) {
                 score++;
                 animate("Lieutenant H.Reigner", syntaxe("Réponse correct, mais ne te relache pas le bleu."), true);
             } else {
                 animate("Lieutenant H.Reigner", syntaxe("C'est faux, concentre-toi soldat {@} !"), true);
             }
         }
-        println("\nVotre note est de " + score + "/10.");
+        score(score);
+    }
+
+    void score(int score) {
+        if((qNombre - 1) == 10) {
+            clean();
+            afficherASCII(asciiMedaille(score), score);
+        } else {
+            println("\nVotre note est de " + score + "/" + (qNombre - 1) + ".\n");
+        }
+
+        sleep(5000);
         println("Sauvegarde du score et de votre profile en cours...");
-        joueur.scores[scoreToChange] = score;
+        if(scoreToChange != -1) {
+            joueur.scores[scoreToChange] = score;
+        } else {
+            joueur.scoreTest = score;
+        }
         sauvegarderJoueur(joueur);
         println("Votre profile et votre score ont été sauvegardé !");
+        sleep(2000);
+        nouvellePartie();
+    }
+
+    String asciiMedaille(int score) {
+        String file;
+        if(score < 5) {
+            file = "./ressources/medailles/medaille0.txt";
+        } else if(score < 8) {
+            file = "./ressources/medailles/medaille1.txt";
+        } else if(score < 10) {
+            file = "./ressources/medailles/medaille2.txt";
+        } else {
+            file = "./ressources/medailles/medaille3.txt";
+        }
+        return file;
+    }
+
+    void test_asciiMedaille() {
+        assertEquals(asciiMedaille(2), "./ressources/medailles/medaille0.txt");
+        assertEquals(asciiMedaille(6), "./ressources/medailles/medaille1.txt");
+        assertEquals(asciiMedaille(9), "./ressources/medailles/medaille2.txt");
+        assertEquals(asciiMedaille(10), "./ressources/medailles/medaille3.txt");
+    }
+
+    void parcours() {
+        scoreToChange = -1;
+        afficherDialogue("./ressources/dialogue/parcours.txt");
+        animate(null, "Le parcours du combattant commence dans ", false);
+        timer();
+        println("\n");
+        int score = 0;
+        for(int i = 0; i < 20; i++) {
+            int epreuve = (i / 2) + 1;
+            afficherASCII("./ressources/epreuves/epreuve" + epreuve + ".txt");
+
+            int random = random(1, length(themes)) - 1;
+            themeActuelle = getTheme(getThemeName(random));
+            int question = questionAleatoire(themeActuelle);
+            if(reponseCorrect(themeActuelle, question)) {
+                score++;
+            }
+        }
+        score(score);   
     }
 
     boolean reponseCorrect(Theme theme, int idQuestion) {
@@ -152,6 +262,7 @@ class Main extends Program {
                 animate("Lieutenant H.Reigner", syntaxe("Ne tente pas d'utiliser des joker ça n'existe pas ici ! Choisis une des propositions..."), true);
             }
         } while(choix < 1 || choix > length(theme.choix, 2));
+        qNombre++;
         return choix == bonneReponse;
     }
 
@@ -160,6 +271,20 @@ class Main extends Program {
                     DONNEE THEME (Création d'un thème etc...) 
     
     */
+
+    int questionAleatoire(Theme theme) {
+        int random = random(1, length(theme.questions)) - 1;
+        while(dejaPose[getLignes(theme)][random]) {
+            random = random(1, length(theme.questions)) - 1;
+        }
+        String question = theme.questions[random];
+        println("Question n°" + qNombre + ": " + question + "\n");
+        for(int j = 0; j < length(theme.choix, 2); j++) {
+            println((j + 1) + ".  " + theme.choix[random][j] + "\n");
+        }
+        dejaPose[getLignes(theme)][random] = true;
+        return random;
+    }
 
     Theme[] chargerTheme() {
         Theme[] theme = new Theme[NB_THEME];
@@ -233,6 +358,14 @@ class Main extends Program {
         return nom;
     }
 
+    void test_getThemeName() {
+        assertEquals("Première Guerre Mondiale", getThemeName(0));
+        assertEquals("Seconde Guerre Mondiale", getThemeName(1));
+        assertEquals("Guerre d'Algérie", getThemeName(2));
+        assertEquals("Guerre Froide", getThemeName(3));
+        assertEquals("Révolution Soviétique", getThemeName(4));
+    }
+
     Theme getTheme(String nom) {
         Theme theme = null;
         for(int i = 0; i < NB_THEME; i++) {
@@ -251,6 +384,11 @@ class Main extends Program {
 
     String[][] getProfiles(boolean csvMode) {
         int total = rowCount(SCORE) - 1;
+        if(!csvMode) {
+            if(total == 0) {
+                return null;
+            }
+        }
         int idx = 1;
         if(csvMode) {
             total = rowCount(SCORE);
@@ -306,15 +444,17 @@ class Main extends Program {
         } else {
             csvTab = ajouterLigneCSV(getProfiles(true));
             lineIdx = length(csvTab, 1) - 1;
-
+            rowCSV = lineIdx;
         }
-        csvTab[lineIdx][0] = joueur.nom;
+        csvTab[rowCSV][0] = joueur.nom;
         for(int i = 0; i < NB_THEME; i++) {
             int tempInt = i + 1;
-            csvTab[lineIdx][tempInt] = "" + joueur.scores[i];
+            csvTab[rowCSV][tempInt] = "" + joueur.scores[i];
         }
-        csvTab[lineIdx][6] = "" + joueur.scoreTest;
+        csvTab[rowCSV][6] = "" + joueur.scoreTest;
         saveCSV(csvTab, "./ressources/data/score.csv", ';');
+        dejaPose = new boolean[length(themes)][15];
+        SCORE = loadCSV("./ressources/data/score.csv", ';');
     }
 
     String[][] ajouterLigneCSV(String[][] csv) {
@@ -328,7 +468,20 @@ class Main extends Program {
         return res;
     }
 
+    void test_ajouterLigneCSV() {
+        String[][] test = new String[7][5];
+        assertEquals(8, length(ajouterLigneCSV(test), 1));
+        assertFalse(length(ajouterLigneCSV(test), 1) == 10);
+    }
+
     /* Utilitaires */
+
+    void timer() {
+        for(int i = 3; i > 0; i--) {
+            animate(null, i + "... ", false);
+            sleep(875);
+        }
+    }
 
     void clean() {
         for(int i = 0 ; i < 1000; i++) {
@@ -370,6 +523,14 @@ class Main extends Program {
         return replace(texte, "{@}", joueur.nom);
     }
 
+    void test_syntaxe() {
+        joueur = newJoueur("null");
+        String syntaxeText1 = "{@}, je suis ravi de te voir ici !";
+        String syntaxeText2 = "Oh ! Il est de retour notre cher {@} !!";
+        assertEquals(syntaxe(syntaxeText1), "null, je suis ravi de te voir ici !");
+        assertEquals(syntaxe(syntaxeText2), "Oh ! Il est de retour notre cher null !!");
+    }
+
     void afficherDialogue(String fichier) {
         File file = new File(fichier);
         String prefix = readLine(file);
@@ -388,6 +549,14 @@ class Main extends Program {
         }
     }
 
+    void afficherASCII(String chemin, int score) {
+        File file = new File(chemin);
+        while(ready(file)) {
+            String ligne = readLine(file);
+            println(replace(ligne, "{*}", "" + score));
+        }
+    }
+
     int lancement() {
         afficherASCII("./ressources/menu/menu.txt");
         return choix();
@@ -403,9 +572,10 @@ class Main extends Program {
         } else if(choix == 2) {
             chargerPartie();
         } else if(choix == 3) {
-
+            tableauScore();
         } else if(choix == 4) {
             println("Merci d'avoir lancé Quiz'toir de Guerre...");
+            println("Développé par LEROI Adrien et RINGARD Mathéo !");
         } else {
             animate(null, "Le nombre que vous avez entré n'est pas un choix !", true);
             sys(false);

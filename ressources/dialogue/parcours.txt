@@ -1,0 +1,4 @@
+Lieutenant H.Reigner
+Vous avez pris le parcours du combattant à ce que je vois soldat {@}.
+Cette mission est différente des autres, vous avez 10 épreuves sur ce parcours. Je vous évaluerais sur vos performances et si vous y arriverez.
+Bonne chance à vous soldat {@}...

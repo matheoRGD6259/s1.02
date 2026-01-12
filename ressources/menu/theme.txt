@@ -14,18 +14,21 @@
     ║          [2]   Seconde Guerre           ║
     ║                   Mondiale              ║
     ║                                         ║
+    ║                                         ║
+    ║          [3]   Guerre d'Algérie         ║
+    ║                                         ║
+    ║                                         ║
+    ║          [4]   Guerre Froide            ║  
     ║                                         ║  
-    ║          [3]   Révolution Soviétique    ║
     ║                                         ║
-    ║                                         ║    
-    ║          [4]   Guerre d'Algérie         ║                                
-    ║                                         ║
-    ║                                         ║          
-    ║          [5]   Guerre Froide            ║                           
+    ║          [5]   Révolution Soviétique    ║
     ║                                         ║
     ║                                         ║
+    ║          [6]   Retour à la page         ║
+    ║                                         ║
+    ║                                         ║                                   
     ║═════════════════════════════════════════║
-    ║     STATUT : THEME VALIDÉ.              ║
+    ║     STATUT : MISSION VALIDÉ.            ║
     ║              EN ATTENTE D'ORDRES...     ║
     ╚════╦═══════════════════════════════╦════╝
          ╚═══════════════════════════════╝

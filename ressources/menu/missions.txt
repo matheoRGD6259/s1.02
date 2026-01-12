@@ -14,10 +14,14 @@
     ║                                         ║
     ║                                         ║
     ║          [3]  PARCOURS DU               ║
-    ║             COMBATTANT (Bientôt)        ║
+    ║               COMBATTANT                ║
     ║                                         ║
     ║                                         ║
-    ║          [4]  VOS NOTES (Bientôt)       ║
+    ║          [4]  VOS NOTES                 ║
+    ║                                         ║
+    ║                                         ║
+    ║          [5]  RETOUR AU                 ║
+    ║                 MENU                    ║
     ║                                         ║
     ║                                         ║
     ║═════════════════════════════════════════║
