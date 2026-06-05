@@ -19,4 +19,4 @@ Si vous souhaitez modifier ou ajouter des questions, vous devez vous rendre dans
 **ATTENTION**
 Toute modification des fichiers présents dans le jeu peut entraîner des bugs, et est donc à vos risques et périls.
 
-Jeu réalisé par LEROI Adrien et RINGARD Mathéo
+Jeu réalisé pour l'Université de Lille - BUT1
